@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Game\Game_judge.cs" />
+    <Compile Include="Assets\Game\Menu.cs" />
     <Compile Include="Assets\Game\Vector_operation.cs" />
     <Compile Include="Assets\Game\answer.cs" />
     <Compile Include="Assets\Game\camera.cs" />

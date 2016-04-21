@@ -14,9 +14,16 @@ public class Menu : MonoBehaviour {
     private TextMesh txt;
 
     public GameObject[] m_ModeText = new GameObject[2];
+    public GameObject m_Enter;
+
+    public int m_Freq;
+    public int m_OnFrame;
+    private int m_FrameCount = 0;
 
     // Use this for initialization
     void Start () {
+
+        m_FrameCount = 0;
         SceneMoveCount = 0;
 
         controller.EnableGesture(Gesture.GestureType.TYPE_SWIPE);
@@ -26,6 +33,9 @@ public class Menu : MonoBehaviour {
 
         m_ModeText[0] = GameObject.Find("mode1");
         m_ModeText[1] = GameObject.Find("mode2");
+
+        m_Enter = GameObject.Find("letter'Enter to Swipe'");
+        m_Enter.SetActive(false);
     }
 
     // Update is called once per frame
@@ -36,7 +46,8 @@ public class Menu : MonoBehaviour {
         Hand[] hand = new Hand[make2.make_plane2.n];//Handオブジェクトをn個確保する.ただし最新情報は0です.
         FingerList[] m_Finger = new FingerList[make2.make_plane2.n];
 
-
+        if (m_FrameCount > m_Freq)
+            m_FrameCount = 0;
 
         for (int i = 0; i < make2.make_plane2.n; i++) //n個分のフレーム情報を取得するためのループ
         {
@@ -62,10 +73,16 @@ public class Menu : MonoBehaviour {
             m_RunningDefficuty = m_Fingers[0];
             txt = (TextMesh)m_ModeText[m_Fingers[0] - 1].GetComponent(typeof(TextMesh));
             txt.fontSize = 23;
+            m_Enter.SetActive(true);
         }
 
         if(m_RunningDefficuty != 0)
         {
+            if (++m_FrameCount < m_OnFrame)
+                m_Enter.SetActive(true);
+            else
+                m_Enter.SetActive(false);
+
             for (int i = 0; i < gestures.Count; i++)
             {
                 Gesture gesture = gestures[i];
@@ -80,6 +97,7 @@ public class Menu : MonoBehaviour {
             {
                 m_RunningDefficuty = 0;
                 txt.fontSize = 18;
+                m_Enter.SetActive(false);
             }
         }
 

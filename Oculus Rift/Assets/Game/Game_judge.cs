@@ -157,7 +157,6 @@ namespace judge
                 temp = V_c.twoVector_angle(normal_vector, normal_vector_old);
                 if ((temp <= (m_PauseRange / 180.0) * Math.PI) && ((question_n % 2) == 0) && (make2.make_plane2.m_RunningState == make2.make_plane2.m_RunningStateNomal))
                 {
-
                     m_PauseCount++;
                 }
                 else if ((temp >= (Math.PI - (m_PauseRange / 180.0) * Math.PI)) && ((question_n % 2) == 0) && (make2.make_plane2.m_RunningState == make2.make_plane2.m_RunningStateNomal))

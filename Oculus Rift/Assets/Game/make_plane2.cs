@@ -18,8 +18,8 @@ namespace make2
 		public GameObject Normal_Position;//手のひらの法線ベクトルを位置を追跡するための球状オブジェクト
 		public GameObject Normal_Axis;
 		public Vector3 normal_vector_rotation;
-		private int left_or_right;//右手か左手かをしつこく確認するための変数
-		public int n = 1;//右手か左手かを確認する回数を指定する変数0<=n<=60の範囲で設定できる.でもあまりしつこく確認しても意味ないかもしれない
+		private static int left_or_right;//右手か左手かをしつこく確認するための変数
+		public static int n = 1;//右手か左手かを確認する回数を指定する変数0<=n<=60の範囲で設定できる.でもあまりしつこく確認しても意味ないかもしれない
 		private float angle;//z軸方向のベクトルと平面の法線ベクトルの成す角を計算して代入する変数
 
         public Vector3 normal_unit_vector;
@@ -57,16 +57,21 @@ namespace make2
 
         void Leap_Motion_getdata()
         {
+
             Frame[] frame = new Frame[n];//leapmotionのフレームをn個確保する.ただし最新のフレームは0です.
             Hand[] hand = new Hand[n];//Handオブジェクトをn個確保する.ただし最新情報は0です.
+            FingerList[] m_Finger = new FingerList[n];
+            
            
 
             for (int i = 0; i < n; i++) //n個分のフレーム情報を取得するためのループ
             {
                 frame[i] = controller.Frame(i);//frame情報を取得
                 hand[i] = frame[i].Hands.Frontmost;//Hand情報を取得
+                m_Finger[i] = frame[i].Fingers;
             }
             GestureList gestures = frame[0].Gestures();
+            //GetFingerCount(hand, frame);
 
             if (Hand_judge(hand, frame) == 1)//Hand_judgeメソッドで右手か左手か何も認識できないかの判定
             {
@@ -121,7 +126,7 @@ namespace make2
 			return new UnityEngine.Vector3( v.x, v.y, v.z );//vector3型を返す
 		}
 
-        int Hand_judge(Hand[] test, Frame[] f)//右手か左手か何も認識できないかの判定を行うメソッド(平面固定用)
+        public static int Hand_judge(Hand[] test, Frame[] f)//右手か左手か何も認識できないかの判定を行うメソッド(平面固定用)
         {
             left_or_right = 0;//判定用のフラグ的な？ここでは変数を初期化します
             for (int i = 0; i < n; i++)//nフレーム分をcheckします 
@@ -137,6 +142,19 @@ namespace make2
 
             else//違ったら0を返して値を収集しません
                 return 0;
+        }
+
+        public static int GetFingerCount(Hand[] hand, Frame[] frame)
+        {
+            int fingers = 0;
+            for (int i = 0; i < n; i++)
+            {
+                if ((hand[i].IsRight) && (frame[i].Fingers.Extended().Count != 0)) {
+                    fingers += frame[i].Fingers.Extended().Count;
+                }
+            }
+            Debug.Log(fingers / n);
+            return (fingers / n);
         }
 
         void PlaneWrite(Vector3 one_point_on_the_plane, Vector3 normal_unit_vector)//平面を描画するためのメソッド(今のところ面倒なんでコメントは控えます）ここはいじる必要なし

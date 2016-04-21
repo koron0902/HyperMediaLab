@@ -28,8 +28,16 @@ namespace make2
         public bool update;
         public bool Leap_Motion;
 
-        public static bool flg = false;
+        // 動作状態を示す読み取り専用の変数群。
+        // 他のクラスからインスタンスなしに参照したかったのでenumしない
+        public static readonly int m_RunningStateNomal = 0; // 通常の動作状態
+        public static readonly int m_RunningStatePause = 1; // 一時停止している状態.右手を抜くと次の状態に遷移
+        public static readonly int m_RunningStatePreNomal = 2;  // 一時停止後に手が抜かれた状態.右手を入れると通常動作に戻る
+        
+        public static int m_RunningState = m_RunningStateNomal; // 動作状態を示す変数
 
+        public static bool flg = false; // 問題番号が奇数である場合にsetされる
+        
 		void Start () 
 		{
 			Normal_Position.transform.position = new Vector3 (0f, -0.2f, 0f);
@@ -73,25 +81,50 @@ namespace make2
             GestureList gestures = frame[0].Gestures();
             //GetFingerCount(hand, frame);
 
-            if (Hand_judge(hand, frame) == 1)//Hand_judgeメソッドで右手か左手か何も認識できないかの判定
+            if (flg)
+            {
+                // 現在の問題番号が奇数である場合
+                Debug.Log("Swipeしてください");
+            }
+            else if (m_RunningState != m_RunningStateNomal)
+            {
+                // 一時停止状態になっている
+                Debug.Log("Succeed!!!!(state:" + m_RunningState + ")");
+                if (Hand_judge(hand, frame) == 0)
+                {
+                    // 手が認識されていない
+                    m_RunningState = m_RunningStatePreNomal;
+                    Debug.Log("手を入れなおしてください");
+                }
+                else if (m_RunningState == m_RunningStatePreNomal)
+                {
+                    // 再度手が認識された
+                    m_RunningState = m_RunningStateNomal;
+                    judge.Game_judge.stop.gameObject.SetActive(false);
+                    judge.Game_judge.again.gameObject.SetActive(false);
+                }
+            }
+            else if (Hand_judge(hand, frame) == 1)//Hand_judgeメソッドで右手か左手か何も認識できないかの判定
             {
                 Debug.Log("確実に右手ですよ");
-                Vector palm = hand[0].PalmNormal;//leapmotionで右手のひらの法線ベクトルを取得
-                Vector normalizedPosition = hand[0].PalmPosition;
+                    Vector palm = hand[0].PalmNormal;//leapmotionで右手のひらの法線ベクトルを取得
+                    Vector normalizedPosition = hand[0].PalmPosition;
 
-                normal_unit_vector = V.Trans_lu (ToVector3 (palm));
-                //normal_unit_vector = V.Trans_lu_normalver(ToVector3(palm));
-                normal_vector_rotation = V.Trans_SCS(normal_unit_vector);
-                Normal_Position.transform.rotation = Quaternion.AngleAxis(normal_vector_rotation.y, new Vector3(0f, 1f, 0f)) * Quaternion.AngleAxis(normal_vector_rotation.z, new Vector3(0f, 0f, 1f));
-                one_point_on_the_plane = (V.Trans_lu (ToVector3 (normalizedPosition)) / 50 - new Vector3(0.5f, -0.5f, 3.0f));
-                //one_point_on_the_plane = (V.Trans_lu_normalver(ToVector3(normalizedPosition)) / 50 + new Vector3(-0.5f, -3.0f, -3.0f));
-                FingerObjects.transform.position = one_point_on_the_plane;//FingerObjectsオブジェクトを取得した手のひらの中心の座標に移動
-                Normal_Axis.transform.position = normal_unit_vector;
 
-                PlaneWrite(one_point_on_the_plane, normal_unit_vector);//平面の描画methodを呼び出す
+                    normal_unit_vector = V.Trans_lu(ToVector3(palm));
+                    //normal_unit_vector = V.Trans_lu_normalver(ToVector3(palm));
+                    normal_vector_rotation = V.Trans_SCS(normal_unit_vector);
+                    Normal_Position.transform.rotation = Quaternion.AngleAxis(normal_vector_rotation.y, new Vector3(0f, 1f, 0f)) * Quaternion.AngleAxis(normal_vector_rotation.z, new Vector3(0f, 0f, 1f));
+                    one_point_on_the_plane = (V.Trans_lu(ToVector3(normalizedPosition)) / 50 - new Vector3(0.5f, -0.5f, 3.0f));
+                    //one_point_on_the_plane = (V.Trans_lu_normalver(ToVector3(normalizedPosition)) / 50 + new Vector3(-0.5f, -3.0f, -3.0f));
+                    FingerObjects.transform.position = one_point_on_the_plane;//FingerObjectsオブジェクトを取得した手のひらの中心の座標に移動
+                    Normal_Axis.transform.position = normal_unit_vector;
+                
+                    PlaneWrite(one_point_on_the_plane, normal_unit_vector);//平面の描画methodを呼び出す
             }
             else if (Hand_judge(hand, frame) == 0)//Hand_judgeメソッドで左手または何も認識できなかったときはこっち
             {
+                judge.Game_judge.m_PauseCount = 0;
                 Debug.Log("左手です！または手が認識できません！");
             }
 

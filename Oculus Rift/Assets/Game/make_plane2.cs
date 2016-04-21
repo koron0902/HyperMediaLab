@@ -18,7 +18,7 @@ namespace make2
 		public GameObject Normal_Position;//手のひらの法線ベクトルを位置を追跡するための球状オブジェクト
 		public GameObject Normal_Axis;
 		public Vector3 normal_vector_rotation;
-		private int left_or_right;//右手か左手かをしつこく確認するための変数
+		private static int left_or_right;//右手か左手かをしつこく確認するための変数
 		public static int n = 1;//右手か左手かを確認する回数を指定する変数0<=n<=60の範囲で設定できる.でもあまりしつこく確認しても意味ないかもしれない
 		private float angle;//z軸方向のベクトルと平面の法線ベクトルの成す角を計算して代入する変数
 
@@ -126,7 +126,7 @@ namespace make2
 			return new UnityEngine.Vector3( v.x, v.y, v.z );//vector3型を返す
 		}
 
-        int Hand_judge(Hand[] test, Frame[] f)//右手か左手か何も認識できないかの判定を行うメソッド(平面固定用)
+        public static int Hand_judge(Hand[] test, Frame[] f)//右手か左手か何も認識できないかの判定を行うメソッド(平面固定用)
         {
             left_or_right = 0;//判定用のフラグ的な？ここでは変数を初期化します
             for (int i = 0; i < n; i++)//nフレーム分をcheckします 

@@ -44,8 +44,8 @@ namespace make2
 			Normal_Axis.transform.position = new Vector3 (0f, 0f, 0f);
 
 			controller.EnableGesture (Gesture.GestureType.TYPE_SWIPE);
-			controller.Config.SetFloat ("Gesture.Swipe.MinLength", 150.0f);
-			controller.Config.SetFloat ("Gesture.Swipe.MinVelocity", 80f);
+			controller.Config.SetFloat ("Gesture.Swipe.MinLength", 120.0f);
+			controller.Config.SetFloat ("Gesture.Swipe.MinVelocity", 60f);
 			controller.Config.Save ();
 		}
 
@@ -84,6 +84,8 @@ namespace make2
             if (flg)
             {
                 // 現在の問題番号が奇数である場合
+                if (Hand_judge(hand, frame) == 1)
+                    Debug.Log("確実に右手ですよ");
                 Debug.Log("Swipeしてください");
             }
             else if (m_RunningState != m_RunningStateNomal)

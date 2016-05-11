@@ -9,11 +9,11 @@ public class Menu : MonoBehaviour {
     private static int m_RunningDefficuty = 0;
     private int SceneMoveCount = 0;
     private bool isInitialized = false;
-    private int m_MaxOfMode = 2;
+    public static int m_MaxOfMode = 2;
     Controller controller = new Controller();
     private TextMesh txt;
 
-    public GameObject[] m_ModeText = new GameObject[2];
+    public GameObject[] m_ModeText = new GameObject[m_MaxOfMode];
     public GameObject m_Enter;
 
     public int m_Freq;
@@ -88,8 +88,8 @@ public class Menu : MonoBehaviour {
                 Gesture gesture = gestures[i];
                 if (gesture.Type == Gesture.GestureType.TYPESWIPE)
                 {
-                    Debug.Log("swipe");
                     isInitialized = true;
+                    controller.Dispose();
                     Application.LoadLevel("for_picture");
                 }
             }
@@ -100,8 +100,6 @@ public class Menu : MonoBehaviour {
                 m_Enter.SetActive(false);
             }
         }
-
-        Debug.Log(m_Fingers[0]);
 	}
 
     public static int GetRunningDificulty()

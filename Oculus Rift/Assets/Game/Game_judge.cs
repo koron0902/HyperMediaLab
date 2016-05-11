@@ -19,6 +19,7 @@ namespace judge
         public static GameObject stop; // 文字'pause'
         public GameObject swipe;
         public static GameObject again;
+        public static GameObject Answer_Plane;
 
 		private int question_quantity; // question_normal_vecetorの配列数を代入する変数
 		private int question_n = 0; // 現在の問題番号を示す変数
@@ -30,18 +31,26 @@ namespace judge
         private Vector3 normal_vector_old;  // Game coordinatesでの平面の法線ベクトルを代入する変数
         private Vector3 one_point;  // Game coordinatesでの平面上の１点を代入する変数
 
+
+
 		private int OK_count = 0; // 問題を正解判定に使用するカウンター
 		public int correct_second; // 正解とする秒数を指定する変数
 
         public static int m_PauseCount = 0; // 一時停止する判定に使用するカウンタ
         public int m_PauseFrame; // 一時停止にするまでのフレーム数
         public float m_PauseRange = 0;
+        private int[,] m_Rotations = new int[,] { 
+            { 45, 270, 180 },
+            { 90, 180,   0 },
+            {  0,  90,   0 }
+        };
 
 		Vector_operation V_c = new Vector_operation (); // ベクトル演算を使用可能する
 
 		 //  Use this for initialization
 		void Start ()
         {
+            
             g = GameObject.Find ("Finger11"); // 手のひらの中心の座標を示す球型オブジェクトを取得
 			normal = GameObject.Find ("normal_axis"); // 平面の法線ベクトル位置を示す球型オブジェクトを取得
 			correct = GameObject.Find ("letter'good'");
@@ -50,6 +59,7 @@ namespace judge
             stop = GameObject.Find("letter'pause'");
             swipe = GameObject.Find("letter'swipe'");
             again = GameObject.Find("letter'again put your hand'");
+            Answer_Plane = GameObject.Find("plane_q1");
 
             stop.transform.position = new Vector3 (-10f, +10f, 0f);
             swipe.transform.position = new Vector3(-10f, +6f, 0f);
@@ -78,6 +88,16 @@ namespace judge
 
             normal_vector = V_c.Trans_gu_ug(normal_vector); // normal_vectorをGame coordinatesに変換
             one_point = V_c.Trans_gu_ug(one_point); // one_pointをGame coordinatesに変換
+            
+            if (Menu.GetRunningDificulty() == 1)
+                    Answer_Plane.SetActive(true);
+            if (question_n < 6)
+                Answer_Plane.transform.rotation = Quaternion.Euler(
+                    m_Rotations[question_n / 2, 0],
+                    m_Rotations[question_n / 2, 1],
+                    m_Rotations[question_n / 2, 2]
+                );
+
 
             if (question_n % 2 != 0)
             { // 現在の問題番号によってpauseをはさむ
@@ -136,7 +156,7 @@ namespace judge
 			{
 				question_n = question_n + 1;
 				next.gameObject.SetActive (true);
-			}
+            }
 
 			else if (temp <= (good_range / 180.0) * Math.PI && question_n % 2 == 0) // 平面の表側の法線ベクトルを確認 
 			{

@@ -193,6 +193,7 @@
     <None Include="Assets\LeapMotion\Version.txt" />
     <None Include="Assets\LeapMotion\Widgets\Shaders\SelfIllumAlpha.shader" />
     <None Include="Assets\LeapMotion\readme.txt" />
+    <None Include="Assets\Materials\myShader.shader" />
     <None Include="Assets\OVR\Shaders\OVRGUIShader.shader" />
     <None Include="Assets\OVR\Shaders\TextShader3D.shader" />
     <None Include="Assets\Plugins\SystemWipeRecognizerDll.bundle\Contents\MacOS\version.txt" />

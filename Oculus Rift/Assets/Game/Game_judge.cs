@@ -75,6 +75,7 @@ namespace judge
             correct.gameObject.SetActive(false); // 文字を非表示に設定
             next.gameObject.SetActive(false); // 文字を非表示に設定
             finish.gameObject.SetActive(false); // 文字を非表示に設定
+            Answer_Plane.SetActive(false);   //
             if (make2.make_plane2.m_RunningState == make2.make_plane2.m_RunningStateNomal)
             {
                 stop.gameObject.SetActive(false); // 文字を非表示に設定

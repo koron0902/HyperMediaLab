@@ -66,6 +66,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Game\DrawLine.cs" />
     <Compile Include="Assets\Game\Game_judge.cs" />
     <Compile Include="Assets\Game\Menu.cs" />
     <Compile Include="Assets\Game\Vector_operation.cs" />

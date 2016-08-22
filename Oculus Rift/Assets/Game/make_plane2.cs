@@ -18,6 +18,7 @@ namespace make2
 		public GameObject Normal_Position;//手のひらの法線ベクトルを位置を追跡するための球状オブジェクト
 		public GameObject Normal_Axis;
 		public Vector3 normal_vector_rotation;
+        public Vector3 mDeltaZeroVector;
 		private static int left_or_right;//右手か左手かをしつこく確認するための変数
 		public static int n = 1;//右手か左手かを確認する回数を指定する変数0<=n<=60の範囲で設定できる.でもあまりしつこく確認しても意味ないかもしれない
 		private float angle;//z軸方向のベクトルと平面の法線ベクトルの成す角を計算して代入する変数
@@ -42,7 +43,7 @@ namespace make2
 		{
 			Normal_Position.transform.position = new Vector3 (0f, -0.2f, 0f);
 			Normal_Axis.transform.position = new Vector3 (0f, 0f, 0f);
-
+            mDeltaZeroVector = new Vector3(0.01f, 0.01f, 0.01f);
 			controller.EnableGesture (Gesture.GestureType.TYPE_SWIPE);
 			controller.Config.SetFloat ("Gesture.Swipe.MinLength", 120.0f);
 			controller.Config.SetFloat ("Gesture.Swipe.MinVelocity", 60f);
@@ -110,14 +111,14 @@ namespace make2
             {
                 Debug.Log("確実に右手ですよ");
                     Vector palm = hand[0].PalmNormal;//leapmotionで右手のひらの法線ベクトルを取得
-                    Vector normalizedPosition = hand[0].PalmPosition;
+                    //Vector normalizedPosition = hand[0].PalmPosition;
 
 
                     normal_unit_vector = V.Trans_lu(ToVector3(palm));
                     //normal_unit_vector = V.Trans_lu_normalver(ToVector3(palm));
                     normal_vector_rotation = V.Trans_SCS(normal_unit_vector);
                     Normal_Position.transform.rotation = Quaternion.AngleAxis(normal_vector_rotation.y, new Vector3(0f, 1f, 0f)) * Quaternion.AngleAxis(normal_vector_rotation.z, new Vector3(0f, 0f, 1f));
-                    one_point_on_the_plane = (V.Trans_lu(ToVector3(normalizedPosition)) / 50 - new Vector3(0.5f, -0.5f, 3.0f));
+                one_point_on_the_plane = mDeltaZeroVector; //(V.Trans_lu(ToVector3(normalizedPosition)) / 50 - new Vector3(0.5f, -0.5f, 3.0f));
                     //one_point_on_the_plane = (V.Trans_lu_normalver(ToVector3(normalizedPosition)) / 50 + new Vector3(-0.5f, -3.0f, -3.0f));
                     FingerObjects.transform.position = one_point_on_the_plane;//FingerObjectsオブジェクトを取得した手のひらの中心の座標に移動
                     Normal_Axis.transform.position = normal_unit_vector;

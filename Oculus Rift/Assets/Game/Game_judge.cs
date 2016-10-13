@@ -90,7 +90,7 @@ namespace judge
             normal_vector = V_c.Trans_gu_ug(normal_vector); // normal_vectorをGame coordinatesに変換
             one_point = V_c.Trans_gu_ug(one_point); // one_pointをGame coordinatesに変換
             
-            if (Menu.GetRunningDificulty() == 1)
+            //if (Menu.GetRunningDificulty() == 1)
                     Answer_Plane.SetActive(true);
             if (question_n < 6)
                 Answer_Plane.transform.rotation = Quaternion.Euler(

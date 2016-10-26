@@ -145,9 +145,10 @@ namespace judge
             mAngles = mRotation.eulerAngles;
             if (mAngles.x > 180)
                 mAngles.x -= 360;
+            mAngles.x += 20;
             var theta = (90 - mAngles.x) * Mathf.PI / 180;
             var phai = mAngles.y * Mathf.PI / 180;
-            e_P.transform.position = new Vector3(-Equaition_Radius * Mathf.Sin(theta) * Mathf.Sin(phai), Equaition_Radius * Mathf.Cos(theta), -Equaition_Radius * Mathf.Sin(theta) * Mathf.Cos(phai));
+            e_P.transform.localPosition = new Vector3(Equaition_Radius * Mathf.Sin(theta) * Mathf.Sin(phai), -Equaition_Radius * Mathf.Cos(theta), Equaition_Radius * Mathf.Sin(theta) * Mathf.Cos(phai));
             e_P.transform.localRotation = mRotation;
             //e_P.transform.localRotation = GameObject.Find("Camera").GetComponent<Camera>().transform.rotation;
 

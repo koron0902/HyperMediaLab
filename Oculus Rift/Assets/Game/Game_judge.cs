@@ -16,12 +16,16 @@ namespace judge
 		public GameObject correct; // 文字'good'
 		public GameObject next; // 文字'Go to the next question'
 		public GameObject finish; // 文字'All Clear!!Congratulations!!'
+
         public static GameObject stop; // 文字'pause'
         public GameObject swipe;
         public static GameObject again;
         public static GameObject Answer_Plane;
 
-		private int question_quantity; // question_normal_vecetorの配列数を代入する変数
+
+        public GameObject mEquaition;
+
+        private int question_quantity; // question_normal_vecetorの配列数を代入する変数
 		private int question_n = 0; // 現在の問題番号を示す変数
 		public Vector3[] question_normal_vector; // 問題を代入する配列
 
@@ -60,6 +64,7 @@ namespace judge
             swipe = GameObject.Find("letter'swipe'");
             again = GameObject.Find("letter'again put your hand'");
             Answer_Plane = GameObject.Find("plane_q1");
+            mEquaition = GameObject.Find("equaition");
 
             stop.transform.position = new Vector3 (-10f, +10f, 0f);
             swipe.transform.position = new Vector3(-10f, +6f, 0f);
@@ -76,7 +81,7 @@ namespace judge
             next.gameObject.SetActive(false); // 文字を非表示に設定
             finish.gameObject.SetActive(false); // 文字を非表示に設定
             Answer_Plane.SetActive(false);   //
-            if (make2.make_plane2.m_RunningState == make2.make_plane2.m_RunningStateNomal)
+            if (make2.make_plane2.mRunningState == make2.make_plane2.m_RunningStateNomal)
             {
                 stop.gameObject.SetActive(false); // 文字を非表示に設定
                 again.gameObject.SetActive(false);
@@ -123,16 +128,28 @@ namespace judge
 			char[] e = new char[6]; // 代数方程式の文字部分を代入する文字型配列
 		    float[] judge = new float[3]; // 代数方程式の数字部分を代入する配列
             
-			TextMesh e_P = (TextMesh)gameObject.GetComponent (typeof(TextMesh));
+			TextMesh e_P = (TextMesh)mEquaition.GetComponent (typeof(TextMesh));
 			int c;
 
 			for (int k = 3; k < 6; k++)
 				e [k] = '+';
 
-			e_P.fontSize = 120;
-            
+            e_P.fontSize = 15;
+            /*mRotation = UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.LeftEye);// GameObject.Find("Camera").GetComponent<Camera>().transform.rotation;
+            mAngles = mRotation.eulerAngles;
+            if (mAngles.x > 180)
+                mAngles.x -= 360;
+            Func<int, float> Deg2Rad = (deg) => { return deg * Mathf.PI / 180; };
+            var theta = (90 - mAngles.x) * Mathf.PI / 180;
+            theta -= Deg2Rad(20);
+            var phai = mAngles.y * Mathf.PI / 180;
+            e_P.transform.localPosition = new Vector3(mEquaitionRadius * Mathf.Sin(theta) * Mathf.Sin(phai), 
+                                                      -mEquaitionRadius * Mathf.Cos(theta), 
+                                                      mEquaitionRadius * Mathf.Sin(theta) * Mathf.Cos(phai));
+            e_P.transform.localRotation = mRotation;*/
 
             
+
             judge = V_c.inner_product (normal_vector);
 			for (int i = 0; i < 3; i++)
 			{
@@ -146,8 +163,9 @@ namespace judge
 					e[i] = (char)(88 + i);
 			}
 
-			string P = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"+"                     法線ベクトル" + question_normal_vector[question_n - (question_n % 2)] + "を持つ平面" + "\n" + "                     平面の代数方程式 :" + judge[0] + e[0] + e[4] + judge[1] + e[1] + e[3] + judge[2] + e[2] + "=" + Vector3.Dot(normal_vector, one_point).ToString("f1");
+			string P = "法線ベクトル" + question_normal_vector[question_n - (question_n % 2)] + "を持つ平面" + "\n" + "平面の代数方程式 :" + judge[0] + e[0] + e[4] + judge[1] + e[1] + e[3] + judge[2] + e[2] + "=" + Vector3.Dot(normal_vector, one_point).ToString("f1");
 			e_P.text = P;
+            
 		}
 
 		void Controll_question() // 問題をコントロールするための関数
@@ -176,11 +194,11 @@ namespace judge
             if (OK_count <= 1)
             {
                 temp = V_c.twoVector_angle(normal_vector, normal_vector_old);
-                if ((temp <= (m_PauseRange / 180.0) * Math.PI) && ((question_n % 2) == 0) && (make2.make_plane2.m_RunningState == make2.make_plane2.m_RunningStateNomal))
+                if ((temp <= (m_PauseRange / 180.0) * Math.PI) && ((question_n % 2) == 0) && (make2.make_plane2.mRunningState == make2.make_plane2.m_RunningStateNomal))
                 {
                     m_PauseCount++;
                 }
-                else if ((temp >= (Math.PI - (m_PauseRange / 180.0) * Math.PI)) && ((question_n % 2) == 0) && (make2.make_plane2.m_RunningState == make2.make_plane2.m_RunningStateNomal))
+                else if ((temp >= (Math.PI - (m_PauseRange / 180.0) * Math.PI)) && ((question_n % 2) == 0) && (make2.make_plane2.mRunningState == make2.make_plane2.m_RunningStateNomal))
                 {
                     m_PauseCount++;
                 }
@@ -191,7 +209,7 @@ namespace judge
                 {
                     stop.gameObject.SetActive(true);
                     again.gameObject.SetActive(true);
-                    make2.make_plane2.m_RunningState = make2.make_plane2.m_RunningStatePause;
+                    make2.make_plane2.mRunningState = make2.make_plane2.mRunningStatePause;
                 }
             }
             else

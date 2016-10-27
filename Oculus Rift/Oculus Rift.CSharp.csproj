@@ -58,12 +58,6 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
@@ -77,6 +71,7 @@
     <Compile Include="Assets\Game\Vector_operation.cs" />
     <Compile Include="Assets\Game\answer.cs" />
     <Compile Include="Assets\Game\camera.cs" />
+    <Compile Include="Assets\Game\equation.cs" />
     <Compile Include="Assets\Game\finish.cs" />
     <Compile Include="Assets\Game\make_plane2.cs" />
     <Compile Include="Assets\Game\next.cs" />

@@ -22,14 +22,10 @@ namespace judge
         public static GameObject again;
         public static GameObject Answer_Plane;
 
-        public GameObject mEquaition;
-        private Quaternion mRotation;
-        private float mPosition;
-        private Vector3 mAngles;
-        public float Equaition_Radius;
-        public GameObject mCamera;
 
-		private int question_quantity; // question_normal_vecetorの配列数を代入する変数
+        public GameObject mEquaition;
+
+        private int question_quantity; // question_normal_vecetorの配列数を代入する変数
 		private int question_n = 0; // 現在の問題番号を示す変数
 		public Vector3[] question_normal_vector; // 問題を代入する配列
 
@@ -68,8 +64,6 @@ namespace judge
             swipe = GameObject.Find("letter'swipe'");
             again = GameObject.Find("letter'again put your hand'");
             Answer_Plane = GameObject.Find("plane_q1");
-            mCamera = GameObject.Find("rotation_camera");
-
             mEquaition = GameObject.Find("equaition");
 
             stop.transform.position = new Vector3 (-10f, +10f, 0f);
@@ -87,7 +81,7 @@ namespace judge
             next.gameObject.SetActive(false); // 文字を非表示に設定
             finish.gameObject.SetActive(false); // 文字を非表示に設定
             Answer_Plane.SetActive(false);   //
-            if (make2.make_plane2.m_RunningState == make2.make_plane2.m_RunningStateNomal)
+            if (make2.make_plane2.mRunningState == make2.make_plane2.m_RunningStateNomal)
             {
                 stop.gameObject.SetActive(false); // 文字を非表示に設定
                 again.gameObject.SetActive(false);
@@ -141,17 +135,20 @@ namespace judge
 				e [k] = '+';
 
             e_P.fontSize = 15;
-            mRotation = GameObject.Find("Camera").GetComponent<Camera>().transform.rotation;
+            /*mRotation = UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.LeftEye);// GameObject.Find("Camera").GetComponent<Camera>().transform.rotation;
             mAngles = mRotation.eulerAngles;
             if (mAngles.x > 180)
                 mAngles.x -= 360;
-            mAngles.x += 20;
+            Func<int, float> Deg2Rad = (deg) => { return deg * Mathf.PI / 180; };
             var theta = (90 - mAngles.x) * Mathf.PI / 180;
+            theta -= Deg2Rad(20);
             var phai = mAngles.y * Mathf.PI / 180;
-            e_P.transform.localPosition = new Vector3(Equaition_Radius * Mathf.Sin(theta) * Mathf.Sin(phai), -Equaition_Radius * Mathf.Cos(theta), Equaition_Radius * Mathf.Sin(theta) * Mathf.Cos(phai));
-            e_P.transform.localRotation = mRotation;
-            //e_P.transform.localRotation = GameObject.Find("Camera").GetComponent<Camera>().transform.rotation;
+            e_P.transform.localPosition = new Vector3(mEquaitionRadius * Mathf.Sin(theta) * Mathf.Sin(phai), 
+                                                      -mEquaitionRadius * Mathf.Cos(theta), 
+                                                      mEquaitionRadius * Mathf.Sin(theta) * Mathf.Cos(phai));
+            e_P.transform.localRotation = mRotation;*/
 
+            
 
             judge = V_c.inner_product (normal_vector);
 			for (int i = 0; i < 3; i++)
@@ -197,11 +194,11 @@ namespace judge
             if (OK_count <= 1)
             {
                 temp = V_c.twoVector_angle(normal_vector, normal_vector_old);
-                if ((temp <= (m_PauseRange / 180.0) * Math.PI) && ((question_n % 2) == 0) && (make2.make_plane2.m_RunningState == make2.make_plane2.m_RunningStateNomal))
+                if ((temp <= (m_PauseRange / 180.0) * Math.PI) && ((question_n % 2) == 0) && (make2.make_plane2.mRunningState == make2.make_plane2.m_RunningStateNomal))
                 {
                     m_PauseCount++;
                 }
-                else if ((temp >= (Math.PI - (m_PauseRange / 180.0) * Math.PI)) && ((question_n % 2) == 0) && (make2.make_plane2.m_RunningState == make2.make_plane2.m_RunningStateNomal))
+                else if ((temp >= (Math.PI - (m_PauseRange / 180.0) * Math.PI)) && ((question_n % 2) == 0) && (make2.make_plane2.mRunningState == make2.make_plane2.m_RunningStateNomal))
                 {
                     m_PauseCount++;
                 }
@@ -212,7 +209,7 @@ namespace judge
                 {
                     stop.gameObject.SetActive(true);
                     again.gameObject.SetActive(true);
-                    make2.make_plane2.m_RunningState = make2.make_plane2.m_RunningStatePause;
+                    make2.make_plane2.mRunningState = make2.make_plane2.mRunningStatePause;
                 }
             }
             else

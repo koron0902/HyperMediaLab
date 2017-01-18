@@ -31,10 +31,10 @@ namespace make2
         // 動作状態を示す読み取り専用の変数群。
         // 他のクラスからインスタンスなしに参照したかったのでenumしない
         public static readonly int m_RunningStateNomal = 0; // 通常の動作状態
-        public static readonly int m_RunningStatePause = 1; // 一時停止している状態.右手を抜くと次の状態に遷移
+        public static readonly int mRunningStatePause = 1; // 一時停止している状態.右手を抜くと次の状態に遷移
         public static readonly int m_RunningStatePreNomal = 2;  // 一時停止後に手が抜かれた状態.右手を入れると通常動作に戻る
         
-        public static int m_RunningState = m_RunningStateNomal; // 動作状態を示す変数
+        public static int mRunningState = m_RunningStateNomal; // 動作状態を示す変数
 
         public static bool flg = false; // 問題番号が奇数である場合にsetされる
         
@@ -88,20 +88,20 @@ namespace make2
                     Debug.Log("確実に右手ですよ");
                 Debug.Log("Swipeしてください");
             }
-            else if (m_RunningState != m_RunningStateNomal)
+            else if (mRunningState != m_RunningStateNomal)
             {
                 // 一時停止状態になっている
-                Debug.Log("Succeed!!!!(state:" + m_RunningState + ")");
+                Debug.Log("Succeed!!!!(state:" + mRunningState + ")");
                 if (Hand_judge(hand, frame) == 0)
                 {
                     // 手が認識されていない
-                    m_RunningState = m_RunningStatePreNomal;
+                    mRunningState = m_RunningStatePreNomal;
                     Debug.Log("手を入れなおしてください");
                 }
-                else if (m_RunningState == m_RunningStatePreNomal)
+                else if (mRunningState == m_RunningStatePreNomal)
                 {
                     // 再度手が認識された
-                    m_RunningState = m_RunningStateNomal;
+                    mRunningState = m_RunningStateNomal;
                     judge.Game_judge.stop.gameObject.SetActive(false);
                     judge.Game_judge.again.gameObject.SetActive(false);
                 }
